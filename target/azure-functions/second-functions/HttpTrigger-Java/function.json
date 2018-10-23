@@ -1,0 +1,15 @@
+{
+  "scriptFile" : "../azure-function-1.0-SNAPSHOT.jar",
+  "entryPoint" : "com.openhack.Function.run",
+  "bindings" : [ {
+    "type" : "httpTrigger",
+    "name" : "req",
+    "direction" : "in",
+    "authLevel" : "function",
+    "methods" : [ "GET", "POST" ]
+  }, {
+    "type" : "http",
+    "name" : "$return",
+    "direction" : "out"
+  } ]
+}
