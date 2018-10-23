@@ -33,3 +33,12 @@ hs_err_pid*
 local.settings.json
 bin/
 obj/
+
+# Eclipse
+.project
+.classpath
+.settings
+.factorypath
+
+# VSCode
+.vscode
