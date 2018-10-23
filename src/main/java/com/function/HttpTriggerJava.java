@@ -45,7 +45,6 @@ public class HttpTriggerJava {
         );
 
         for (Document family : queryResults.getQueryIterable()) {
-            family.get
             System.out.println(String.format("\tRead %s", family));
         }
 
