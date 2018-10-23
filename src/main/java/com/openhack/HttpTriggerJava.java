@@ -1,4 +1,4 @@
-package com.function;
+package com.openhack;
 
 import java.util.*;
 import com.microsoft.azure.functions.annotation.*;
@@ -27,8 +27,8 @@ public class HttpTriggerJava {
         queryOptions.setEnableCrossPartitionQuery(true);
 
         DocumentClient documentClient = new DocumentClient(
-            "", 
-            "", 
+            System.getenv("serviceEndpoint"),
+            System.getenv("masterKey"), 
             ConnectionPolicy.GetDefault(), 
             ConsistencyLevel.Session
         );
