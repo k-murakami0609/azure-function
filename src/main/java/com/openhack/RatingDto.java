@@ -7,4 +7,5 @@ public class RatingDto {
     public String locationName;
     public Integer rating;
     public String userNotes;
+    public String timestamp;
 }

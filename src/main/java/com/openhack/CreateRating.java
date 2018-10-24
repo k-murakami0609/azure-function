@@ -6,6 +6,9 @@ import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 
+import java.text.SimpleDateFormat;
+import java.util.UUID;
+
 /**
  * Azure Functions with HTTP Trigger.
  */
@@ -31,14 +34,20 @@ public class CreateRating {
         }
 
         try {
+            String uuid = UUID.randomUUID().toString();
+            inputDto.id = uuid;
+
             RatingDao ratingDao = new RatingDao();
-            ratingDao.create(inputDto);
+            Document doc = ratingDao.create(inputDto);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ");
+            inputDto.timestamp = sdf.format(doc.getTimestamp());
+
+            return request.createResponseBuilder(HttpStatus.OK).header("Content-Type", "application/json").body(inputDto).build();
         } catch(RuntimeException e) {
             e.printStackTrace();
             context.getLogger().warning(e.toString());
             return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        return request.createResponseBuilder(HttpStatus.OK).build();
     }
 }
