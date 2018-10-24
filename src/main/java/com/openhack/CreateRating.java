@@ -2,7 +2,7 @@ package com.openhack;
 
 import com.microsoft.azure.documentdb.*;
 import com.microsoft.azure.functions.*;
-import com.microsoft.azure.funcions.annotation.AuthorizationLevel;
+import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 
@@ -32,12 +32,7 @@ public class CreateRating {
         queryOptions.setPageSize(-1);
         queryOptions.setEnableCrossPartitionQuery(true);
 
-        DocumentClient documentClient = new DocumentClient(
-            System.getenv("serviceEndpoint"),
-            System.getenv("masterKey"), 
-            ConnectionPolicy.GetDefault(), 
-            ConsistencyLevel.Session
-        );
+        DocumentClient documentClient = DocumentDbUtils.createClient();
 
         String databaseName = "OpenHack";
         String collectionName = "ratings";

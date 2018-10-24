@@ -1,17 +1,11 @@
 package com.openhack;
 
 import com.google.gson.Gson;
-import com.microsoft.azure.documentdb.ConnectionPolicy;
-import com.microsoft.azure.documentdb.ConsistencyLevel;
 import com.microsoft.azure.documentdb.Document;
 import com.microsoft.azure.documentdb.DocumentClient;
 import com.microsoft.azure.documentdb.FeedOptions;
 import com.microsoft.azure.documentdb.FeedResponse;
-import com.microsoft.azure.functions.ExecutionContext;
-import com.microsoft.azure.functions.HttpMethod;
-import com.microsoft.azure.functions.HttpRequestMessage;
-import com.microsoft.azure.functions.HttpResponseMessage;
-import com.microsoft.azure.functions.HttpStatus;
+import com.microsoft.azure.functions.*;
 import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
@@ -29,12 +23,8 @@ public class GetRating {
     private FeedOptions queryOptions;
 
     public GetRating() {
-        this.documentClient = new DocumentClient(
-                System.getenv("serviceEndpoint"),
-                System.getenv("masterKey"),
-                ConnectionPolicy.GetDefault(),
-                ConsistencyLevel.Session
-        );
+        this.documentClient = DocumentDbUtils.createClient();
+
         FeedOptions queryOptions = new FeedOptions();
         queryOptions.setPageSize(-1);
         queryOptions.setEnableCrossPartitionQuery(true);

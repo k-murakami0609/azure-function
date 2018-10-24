@@ -26,11 +26,7 @@ public class HttpTriggerJava {
         queryOptions.setPageSize(-1);
         queryOptions.setEnableCrossPartitionQuery(true);
 
-        String serviceEndpoint = System.getenv("serviceEndpoint");
-        String masterKey = System.getenv("masterKey");
-
-        DocumentClient documentClient = new DocumentClient(serviceEndpoint, masterKey, ConnectionPolicy.GetDefault(),
-                ConsistencyLevel.Session);
+        DocumentClient documentClient = DocumentDbUtils.createClient();
 
         String databaseName = "OpenHack";
         String collectionName = "ratings";

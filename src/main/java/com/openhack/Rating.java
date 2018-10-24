@@ -3,8 +3,6 @@ package com.openhack;
 import lombok.Builder;
 import lombok.Data;
 
-import java.security.Timestamp;
-
 @Data
 @Builder
 public class Rating {
