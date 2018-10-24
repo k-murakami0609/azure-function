@@ -2,7 +2,7 @@ package com.openhack;
 
 import com.microsoft.azure.documentdb.*;
 import com.microsoft.azure.functions.*;
-import com.microsoft.azure.funcions.annotation.AuthorizationLevel;
+import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 
