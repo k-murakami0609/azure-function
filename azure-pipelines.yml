@@ -17,6 +17,3 @@ steps:
     publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
     goals: 'package'
-- task: Maven@3
-  inputs:
-    goals: 'azure-functions:deploy'
