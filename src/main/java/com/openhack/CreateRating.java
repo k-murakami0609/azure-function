@@ -21,30 +21,24 @@ public class CreateRating {
             final ExecutionContext context) {
         context.getLogger().info("Java HTTP trigger processed a request.");
 
-        // Parse query parameter
         RatingDto inputDto = request.getBody();
-        context.getLogger().info("00000000000");
-        context.getLogger().info(inputDto.id);
-        context.getLogger().info(inputDto.locationName);
-        context.getLogger().info("00000000000");
-
-        FeedOptions queryOptions = new FeedOptions();
-        queryOptions.setPageSize(-1);
-        queryOptions.setEnableCrossPartitionQuery(true);
-
-        DocumentClient documentClient = DocumentDbUtils.createClient();
-
-        String databaseName = "OpenHack";
-        String collectionName = "ratings";
-
-        String collectionLink = String.format("/dbs/%s/colls/%s", databaseName, collectionName);
-        
-        try {
-            documentClient.createDocument(collectionLink, inputDto, new RequestOptions(), true);
-        } catch(Exception e) {
-            System.out.println(e);
+        if (inputDto == null) {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                .header("Content-Type", "application/json")
+                .body(Error.builder().code(HttpStatus.BAD_REQUEST.value())
+                .message("request body must not empty"))
+                .build();
         }
 
-        return request.createResponseBuilder(HttpStatus.OK).body("Hello, ").build();
+        try {
+            RatingDao ratingDao = new RatingDao();
+            ratingDao.create(inputDto);
+        } catch(RuntimeException e) {
+            e.printStackTrace();
+            context.getLogger().warning(e.toString());
+            return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return request.createResponseBuilder(HttpStatus.OK).build();
     }
 }

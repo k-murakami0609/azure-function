@@ -24,10 +24,11 @@ public class RatingDao {
 
             return response.getResource();
         } catch(RuntimeException e) {
+            e.printStackTrace();
             throw e;
         } catch(Exception e) {
+            e.printStackTrace();
             throw new IllegalStateException(e);
         }
-
     }
 }
