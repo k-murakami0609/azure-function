@@ -29,8 +29,16 @@ public class CreateRating {
             return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
                 .header("Content-Type", "application/json")
                 .body(Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message("request body must not empty"))
+                .message("request body is must not be null or empty"))
                 .build();
+        }
+
+        if (inputDto.rating < 0 || inputDto.rating > 5) {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                    .header("Content-Type", "application/json")
+                    .body(Error.builder().code(HttpStatus.BAD_REQUEST.value())
+                            .message("request body is invalid value"))
+                    .build();
         }
 
         try {
