@@ -32,15 +32,9 @@ public class CreateRating {
         queryOptions.setPageSize(-1);
         queryOptions.setEnableCrossPartitionQuery(true);
 
-        DocumentClient documentClient = DocumentDbUtils.createClient();
-
-        String databaseName = "OpenHack";
-        String collectionName = "ratings";
-
-        String collectionLink = String.format("/dbs/%s/colls/%s", databaseName, collectionName);
-        
         try {
-            documentClient.createDocument(collectionLink, inputDto, new RequestOptions(), true);
+            RatingDao dao = new RatingDao();
+            Document document = dao.create(inputDto);
         } catch(Exception e) {
             System.out.println(e);
         }
