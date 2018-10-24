@@ -1,6 +1,6 @@
 package com.openhack;
 
-public class RatingDao {
+public class RatingDto {
     public String id;
     public String userId;
     public String productId;

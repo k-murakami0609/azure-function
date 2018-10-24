@@ -1,14 +1,10 @@
 package com.openhack;
 
-import java.util.*;
-import com.microsoft.azure.functions.annotation.*;
-import com.microsoft.azure.functions.*;
-
-import com.dto.*;
-import com.microsoft.azure.documentdb.DocumentClient;
 import com.microsoft.azure.documentdb.*;
-import com.microsoft.azure.documentdb.ConnectionPolicy;
-import com.microsoft.azure.documentdb.ConsistencyLevel;
+import com.microsoft.azure.functions.*;
+import com.microsoft.azure.funcions.annotation.AuthorizationLevel;
+import com.microsoft.azure.functions.annotation.FunctionName;
+import com.microsoft.azure.functions.annotation.HttpTrigger;
 
 /**
  * Azure Functions with HTTP Trigger.
@@ -21,15 +17,15 @@ public class CreateRating {
      */
     @FunctionName("CreateRating")
     public HttpResponseMessage run(
-            @HttpTrigger(name = "req", methods = {HttpMethod.GET, HttpMethod.POST}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<RatingDao> request,
+            @HttpTrigger(name = "req", methods = {HttpMethod.GET, HttpMethod.POST}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<RatingDto> request,
             final ExecutionContext context) {
         context.getLogger().info("Java HTTP trigger processed a request.");
 
         // Parse query parameter
-        RatingDao name = request.getBody();
+        RatingDto inputDto = request.getBody();
         context.getLogger().info("00000000000");
-        context.getLogger().info(name.id);
-        context.getLogger().info(name.locationName);
+        context.getLogger().info(inputDto.id);
+        context.getLogger().info(inputDto.locationName);
         context.getLogger().info("00000000000");
 
         FeedOptions queryOptions = new FeedOptions();
@@ -49,7 +45,7 @@ public class CreateRating {
         String collectionLink = String.format("/dbs/%s/colls/%s", databaseName, collectionName);
         
         try {
-            documentClient.createDocument(collectionLink, name, new RequestOptions(), true);
+            documentClient.createDocument(collectionLink, inputDto, new RequestOptions(), true);
         } catch(Exception e) {
             System.out.println(e);
         }
