@@ -76,7 +76,7 @@ public class GetRating {
 
         List<Rating> ratingList = new ArrayList<>();
         queryResults.getQueryIterable().forEach(document -> {
-            ratingList.add(gson.fromJson(document.toJson(), Rating.class));
+            ratingList.add(gson.fromJson(String.format("%s", document), Rating.class));
         });
 
         if (ratingList.size() == 0) {
