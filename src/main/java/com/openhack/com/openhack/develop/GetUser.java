@@ -1,4 +1,4 @@
-package com.openhack;
+package com.openhack.com.openhack.develop;
 
 import com.google.gson.Gson;
 import com.microsoft.azure.documentdb.ConnectionPolicy;
@@ -15,20 +15,22 @@ import com.microsoft.azure.functions.HttpStatus;
 import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
+import com.openhack.Error;
+import com.openhack.User;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class GetProduct {
+public class GetUser {
 
     private static final String DATABASE_NAME = "OpenHack";
-    private static final String COLLECTION_NAME = "products";
+    private static final String COLLECTION_NAME = "users";
     private Gson gson = new Gson();
     private DocumentClient documentClient;
     private FeedOptions queryOptions;
 
-    public GetProduct() {
+    public GetUser() {
         this.documentClient = new DocumentClient(
                 System.getenv("serviceEndpoint"),
                 System.getenv("masterKey"),
@@ -41,30 +43,30 @@ public class GetProduct {
         this.queryOptions = queryOptions;
     }
 
-    @FunctionName("GetProduct")
-    public HttpResponseMessage getProduct(
+    @FunctionName("GetUser")
+    public HttpResponseMessage getUser(
             @HttpTrigger(name = "req", methods = {HttpMethod.GET}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
 
         // Parse query parameter
-        String query = request.getQueryParameters().get("productId");
-        String productId = request.getBody().orElse(query);
+        String query = request.getQueryParameters().get("userId");
+        String userId = request.getBody().orElse(query);
 
-        if (productId == null || productId.isEmpty()) {
-            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).header("Content-Type", "application/json").body(Error.builder().code(HttpStatus.BAD_REQUEST.value()).message("Query parameter productId is must not be null or empty")).build();
+        if (userId == null || userId.isEmpty()) {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).header("Content-Type", "application/json").body(Error.builder().code(HttpStatus.BAD_REQUEST.value()).message("Query parameter userId is must not be null or empty")).build();
         }
 
         String collectionLink = String.format("/dbs/%s/colls/%s", DATABASE_NAME, COLLECTION_NAME);
-        FeedResponse<Document> queryResults = documentClient.queryDocuments(collectionLink, "SELECT * FROM products p where p.productId='" + productId + "'", queryOptions);
+        FeedResponse<Document> queryResults = documentClient.queryDocuments(collectionLink, "SELECT * FROM users r where r.userId='" + userId + "'", queryOptions);
 
-        List<Product> productList = new ArrayList<>();
+        List<User> userList = new ArrayList<>();
         queryResults.getQueryIterable().forEach(document -> {
-            productList.add(gson.fromJson(String.format("%s", document), Product.class));
+            userList.add(gson.fromJson(String.format("%s", document), User.class));
         });
 
-        if (productList.size() == 0) {
-            return request.createResponseBuilder(HttpStatus.NOT_FOUND).body(Error.builder().code(HttpStatus.NOT_FOUND.value()).message("ID " + productId + " is not found.")).header("Content-Type", "application/json").build();
+        if (userList.size() == 0) {
+            return request.createResponseBuilder(HttpStatus.NOT_FOUND).body(Error.builder().code(HttpStatus.NOT_FOUND.value()).message("ID " + userId + " is not found.")).header("Content-Type", "application/json").build();
         }
-        return request.createResponseBuilder(HttpStatus.OK).header("Content-Type", "application/json").body(productList.get(0)).build();
+        return request.createResponseBuilder(HttpStatus.OK).header("Content-Type", "application/json").body(userList.get(0)).build();
     }
 }
